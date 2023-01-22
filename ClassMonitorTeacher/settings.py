@@ -28,7 +28,7 @@ SECRET_KEY = envFile["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = envFile["DEBUG"]
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = envFile["ALLOWED_HOSTS"]
 
 
 # Application definition
