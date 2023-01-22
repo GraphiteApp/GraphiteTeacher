@@ -1,6 +1,3 @@
-# environment variables
-.env
-
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
