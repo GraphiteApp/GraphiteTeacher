@@ -1,0 +1,30 @@
+{% extends "ClassMonitor/layout.html" %}
+
+{% block body %}
+    <div style="text-align: center">
+        <div>
+            <h1>
+                Register
+            </h1>
+        </div>
+        <form method="POST" id="register">
+            {% csrf_token %}
+            <div>
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" required>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+            <div>
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" name="confirm_password" id="confirm_password" required>
+            </div>
+            <div>
+                <input type="submit" value="Register">
+            </div>
+        </form>
+        <a href="/login">Login</a>
+    </div>
+{% endblock %}
