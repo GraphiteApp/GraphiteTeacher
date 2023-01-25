@@ -7,3 +7,4 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Profile, ProfileAdmin)
+admin.site.register(models.Student)
