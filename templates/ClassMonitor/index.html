@@ -1,15 +1,19 @@
 {% extends "ClassMonitor/layout.html" %}
+{% load static %}
 
 {% block body %}
+    <script src="{% static 'ClassMonitor/javascript/index.js' %}"></script>
     <div>
         <h1>Index</h1>
         <h2>Welcome, {{ user }}!</h2>
         <p>
             Your class code is: <b>{{ class_code }}</b>
         </p>
-        <p>
-            wow nice
-        </p>
+        <form method="post">
+            {% csrf_token %}
+            <button id="start_exam">Start Exam</button>
+        </form>
+
         <a href="/logout">Logout</a>
     </div>
 

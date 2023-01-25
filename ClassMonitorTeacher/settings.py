@@ -30,7 +30,7 @@ DEBUG = envFile["DEBUG"]
 
 ALLOWED_HOSTS = envFile["ALLOWED_HOSTS"]
 
-STATICFILES_DIRS = envFile["ALLOWEDHOSTS"] if "STATICFILES_DIRS" in envFile else [
+STATICFILES_DIRS = envFile["STATICFILES_DIRS"] if "STATICFILES_DIRS" in envFile else [
     BASE_DIR / "static",
 ]
 

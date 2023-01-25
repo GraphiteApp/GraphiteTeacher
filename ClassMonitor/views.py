@@ -6,9 +6,15 @@ from . import utils
 from . import models
 import random
 
+
 def index(request):
     if not utils.check_login(request):
         return redirect('login')
+
+    if request.method == 'POST':
+        models.Profile.objects.filter(user=request.user).update(examStarted=True)
+        # redirect to exam
+        return redirect('/exam')
 
     return render(request, './ClassMonitor/index.html', {
         'class_code': models.Profile.objects.get(user=request.user).classCode if models.Profile.objects.filter(user=request.user).exists() else "no class code",
