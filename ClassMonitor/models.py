@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 
 
-#class User(AbstractUser):
-#    classCode = models.CharField(max_length=25)
-#    pass
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    classCode = models.CharField(max_length=10, unique=True, null=False, blank=False)
