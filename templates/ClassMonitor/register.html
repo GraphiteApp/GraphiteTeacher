@@ -1,6 +1,8 @@
 {% extends "ClassMonitor/layout.html" %}
+{% load static %}
 
 {% block body %}
+    <script src="{% static '/ClassMonitor/javascript/register.js' %}"></script>
     <div style="text-align: center">
         <div>
             <h1>
@@ -15,11 +17,11 @@
             </div>
             <div>
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" required>
+                <input type="password" name="password" id="password" value="" required>
             </div>
             <div>
                 <label for="confirm_password">Confirm Password</label>
-                <input type="password" name="confirm_password" id="confirm_password" required>
+                <input type="password" name="confirm_password" id="confirm_password" value="" required>
             </div>
             <div>
                 <input type="submit" value="Register">
