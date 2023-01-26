@@ -27,7 +27,7 @@ def join_exam(request):
             return response
 
         # check if student exists
-        if teacher.students.exists() and username in teacher.students:
+        if Student.objects.filter(username=username).exists():
             response.status_code = 400
             response.content = 'Student already exists'
             return response
