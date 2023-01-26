@@ -11,7 +11,7 @@
         </p>
         <form method="post">
             {% csrf_token %}
-            <button id="start_exam">Start Exam</button>
+            <button id="start_exam">{% if exam_started %} View exam {% else %} Start Exam {% endif %}</button>
         </form>
 
         <a href="/logout">Logout</a>

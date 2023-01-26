@@ -18,7 +18,8 @@ def index(request):
 
     return render(request, './ClassMonitor/index.html', {
         'class_code': models.Profile.objects.get(user=request.user).classCode if models.Profile.objects.filter(user=request.user).exists() else "no class code",
-        'user': request.user
+        'user': request.user,
+        'exam_started': models.Profile.objects.get(user=request.user).examStarted if models.Profile.objects.filter(user=request.user).exists() else False,
     })
 
 
@@ -70,3 +71,17 @@ def register(request):
 def logout_page(request):
     logout(request)
     return redirect('login')
+
+
+def exam(request):
+    if request.method == 'POST':
+        request_type = request.POST['type']
+        if request_type == 'end_exam':
+            models.Profile.objects.filter(user=request.user).update(examStarted=False)
+            return redirect('/')
+
+    return render(request, './ClassMonitor/exam.html', {
+        'students': models.Student.objects.filter(teacher=request.user),
+        'students_length': len(models.Student.objects.filter(teacher=request.user)),
+        'class_code': models.Profile.objects.get(user=request.user).classCode if models.Profile.objects.filter(user=request.user).exists() else "no class code",
+    })

@@ -1,0 +1,27 @@
+{% extends "ClassMonitor/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div>
+        <h1>Exam started</h1>
+        <h2>Class Code: {{ class_code }}</h2>
+        <h2>Students</h2>
+        {% if students_length %}
+            <ul>
+                {% for student in students %}
+                    <li>{{ student }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No students</p>
+        {% endif %}
+
+        <form action="/exam" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="end_exam">
+            <input type="submit" value="End Exam">
+        </form>
+    </div>
+
+
+{% endblock %}
