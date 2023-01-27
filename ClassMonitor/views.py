@@ -7,6 +7,22 @@ from . import models
 import random
 
 
+class Calculator:
+    isAllowed = False
+    name = ''
+
+    def __init__(self, name, is_allowed):
+        self.name = name
+        self.isAllowed = is_allowed
+
+
+calculators = [
+    'Basic',
+    'Scientific',
+    'Graphing',
+]
+
+
 def index(request):
     if not utils.check_login(request):
         return redirect('login')
@@ -17,9 +33,11 @@ def index(request):
         return redirect('/exam')
 
     return render(request, './ClassMonitor/index.html', {
-        'class_code': models.Profile.objects.get(user=request.user).classCode if models.Profile.objects.filter(user=request.user).exists() else "no class code",
+        'class_code': models.Profile.objects.get(user=request.user).classCode if models.Profile.objects.filter(
+            user=request.user).exists() else "no class code",
         'user': request.user,
-        'exam_started': models.Profile.objects.get(user=request.user).examStarted if models.Profile.objects.filter(user=request.user).exists() else False,
+        'exam_started': models.Profile.objects.get(user=request.user).examStarted if models.Profile.objects.filter(
+            user=request.user).exists() else False,
     })
 
 
@@ -74,14 +92,46 @@ def logout_page(request):
 
 
 def exam(request):
+    if not utils.check_login(request):
+        return redirect('login')
+
+    global calculators
+
+    user = request.user
+    profile = models.Profile.objects.get(user=user)
+
+    # probably a better way to do this
+    userCalculators = [Calculator('Basic', profile.basic_calculator),
+                       Calculator('Scientific', profile.scientific_calculator),
+                       Calculator('Graphing', profile.graphing_calculator)]
+
+    print(userCalculators)
+
     if request.method == 'POST':
         request_type = request.POST['type']
         if request_type == 'end_exam':
-            models.Profile.objects.filter(user=request.user).update(examStarted=False)
+            models.Profile.objects.filter(user=user).update(examStarted=False)
+            # clear students
+            models.Profile.objects.get(user=user).students.clear()
+            models.Student.objects.filter(teacher=user).delete()
             return redirect('/')
 
+        if request_type == 'update_calculators':
+            for calculator in userCalculators:
+                calculator.isAllowed = calculator.name in request.POST
+
+            for calculator in userCalculators:
+                if calculator.name == 'Graphing':
+                    models.Profile.objects.filter(user=user).update(graphing_calculator=calculator.isAllowed)
+                if calculator.name == 'Scientific':
+                    models.Profile.objects.filter(user=user).update(scientific_calculator=calculator.isAllowed)
+                if calculator.name == 'Basic':
+                    models.Profile.objects.filter(user=user).update(basic_calculator=calculator.isAllowed)
+
     return render(request, './ClassMonitor/exam.html', {
-        'students': models.Student.objects.filter(teacher=request.user),
-        'students_length': len(models.Student.objects.filter(teacher=request.user)),
-        'class_code': models.Profile.objects.get(user=request.user).classCode if models.Profile.objects.filter(user=request.user).exists() else "no class code",
+        'students': models.Student.objects.filter(teacher=user),
+        'students_length': len(models.Student.objects.filter(teacher=user)),
+        'class_code': models.Profile.objects.get(user=user).classCode if models.Profile.objects.filter(
+            user=user).exists() else "no class code",
+        'calculators': userCalculators,
     })

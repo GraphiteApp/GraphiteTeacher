@@ -9,12 +9,28 @@
         {% if students_length %}
             <ul>
                 {% for student in students %}
-                    <li>{{ student }}</li>
+                    <li>{{ student.username }}</li>
                 {% endfor %}
             </ul>
         {% else %}
             <p>No students</p>
         {% endif %}
+
+        <h2>
+            Allowed calculators
+        </h2>
+        <form action="/exam" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="update_calculators">
+            {% for calculator in calculators %}
+                <label>
+                    <input type="checkbox" name="{{ calculator.name }}" value="{{ calculator.name }}" {% if calculator.isAllowed %}checked{% endif %}>
+                    {{ calculator.name }}
+                    <br>
+                </label>
+            {% endfor %}
+            <input type="submit" value="Update">
+        </form>
 
         <form action="/exam" method="post">
             {% csrf_token %}

@@ -7,6 +7,13 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def join_exam(request):
     if request.method == 'POST':
+        # check if class_code and username are in request
+        if 'class_code' not in request.POST or 'username' not in request.POST:
+            response = HttpResponse()
+            response.status_code = 400
+            response.content = 'Missing class_code or username'
+            return response
+
         # get classCode
         response = HttpResponse()
         class_code = request.POST['class_code']

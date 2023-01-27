@@ -12,3 +12,6 @@ class Profile(models.Model):
     classCode = models.CharField(max_length=10, unique=True, null=False, blank=False)
     examStarted = models.BooleanField(default=False)
     students = models.ManyToManyField(Student, blank=True)
+    basic_calculator = models.BooleanField(default=False)
+    scientific_calculator = models.BooleanField(default=False)
+    graphing_calculator = models.BooleanField(default=False)
