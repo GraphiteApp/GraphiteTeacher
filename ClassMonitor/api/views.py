@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from ..models import *
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
+from .. import utils
+import json
 
 
 @csrf_exempt
@@ -51,11 +53,13 @@ def join_exam(request):
 
     return HttpResponse('Invalid request method')
 
+
+@csrf_exempt
 def get_calculators(request):
     if request.method == 'GET':
         # get classCode
         response = HttpResponse()
-        class_code = request.GET['class_code']
+        class_code = request.GET.get('class_code', None)
 
         # check if class code exists
         if not Profile.objects.filter(classCode=class_code).exists():
@@ -63,4 +67,8 @@ def get_calculators(request):
             response.content = 'Class code does not exist'
             return response
 
-        
+        response.status_code = 200
+        response.content = json.dumps(utils.Calculator.get_allowed_calculators(class_code))
+        return response
+
+    return HttpResponse('Invalid request method')

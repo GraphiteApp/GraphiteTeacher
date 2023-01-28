@@ -40,6 +40,15 @@ class Calculator:
         profile.graphing_calculator = False
         profile.save()
 
+    @staticmethod
+    def get_allowed_calculators(class_code):
+        profile = Profile.objects.get(classCode=class_code)
+        return {
+            'basic': profile.basic_calculator,
+            'scientific': profile.scientific_calculator,
+            'graphing': profile.graphing_calculator,
+        }
+
 
 def check_login(request):
     return request.user.is_authenticated
