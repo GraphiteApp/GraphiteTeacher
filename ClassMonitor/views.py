@@ -7,15 +7,6 @@ from . import models
 import random
 
 
-class Calculator:
-    isAllowed = False
-    name = ''
-
-    def __init__(self, name, is_allowed):
-        self.name = name
-        self.isAllowed = is_allowed
-
-
 calculators = [
     'Basic',
     'Scientific',
@@ -101,9 +92,7 @@ def exam(request):
     profile = models.Profile.objects.get(user=user)
 
     # probably a better way to do this
-    userCalculators = [Calculator('Basic', profile.basic_calculator),
-                       Calculator('Scientific', profile.scientific_calculator),
-                       Calculator('Graphing', profile.graphing_calculator)]
+    userCalculators = utils.Calculator.get_calculators(profile.classCode)
 
     print(userCalculators)
 
@@ -114,19 +103,16 @@ def exam(request):
             # clear students
             models.Profile.objects.get(user=user).students.clear()
             models.Student.objects.filter(teacher=user).delete()
+
+            # clear calculators
+            utils.Calculator.reset_calculators(user)
             return redirect('/')
 
         if request_type == 'update_calculators':
             for calculator in userCalculators:
                 calculator.isAllowed = calculator.name in request.POST
 
-            for calculator in userCalculators:
-                if calculator.name == 'Graphing':
-                    models.Profile.objects.filter(user=user).update(graphing_calculator=calculator.isAllowed)
-                if calculator.name == 'Scientific':
-                    models.Profile.objects.filter(user=user).update(scientific_calculator=calculator.isAllowed)
-                if calculator.name == 'Basic':
-                    models.Profile.objects.filter(user=user).update(basic_calculator=calculator.isAllowed)
+            utils.Calculator.update_calculators(user, userCalculators)
 
     return render(request, './ClassMonitor/exam.html', {
         'students': models.Student.objects.filter(teacher=user),

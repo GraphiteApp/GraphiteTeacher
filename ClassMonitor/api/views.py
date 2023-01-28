@@ -50,3 +50,17 @@ def join_exam(request):
         return response
 
     return HttpResponse('Invalid request method')
+
+def get_calculators(request):
+    if request.method == 'GET':
+        # get classCode
+        response = HttpResponse()
+        class_code = request.GET['class_code']
+
+        # check if class code exists
+        if not Profile.objects.filter(classCode=class_code).exists():
+            response.status_code = 404
+            response.content = 'Class code does not exist'
+            return response
+
+        
