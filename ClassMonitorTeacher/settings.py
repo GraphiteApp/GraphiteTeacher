@@ -34,6 +34,9 @@ STATICFILES_DIRS = envFile["STATICFILES_DIRS"] if "STATICFILES_DIRS" in envFile 
     BASE_DIR / "static",
 ]
 
+if "STATIC_ROOT" in envFile:
+    STATIC_ROOT = envFile["STATIC_ROOT"]
+
 # Application definition
 
 INSTALLED_APPS = [
