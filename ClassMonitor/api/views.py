@@ -72,3 +72,34 @@ def get_calculators(request):
         return response
 
     return HttpResponse('Invalid request method')
+
+
+@csrf_exempt
+def leave_exam(request):
+    if request.method == 'POST':
+        # get classCode and username
+        response = HttpResponse()
+        class_code = request.POST['class_code']
+        username = request.POST['username']
+
+        # check if class code exists
+        if not Profile.objects.filter(classCode=class_code).exists():
+            response.status_code = 404
+            response.content = 'Class code does not exist'
+            return response
+
+        # check if student exists
+        if not Student.objects.filter(username=username).exists():
+            response.status_code = 404
+            response.content = 'Student does not exist'
+            return response
+
+        # remove student from students
+        Student.objects.get(username=username).delete()
+
+        response.status_code = 200
+        response.content = 'Left exam'
+
+        return response
+
+    return HttpResponse('Invalid request method')
