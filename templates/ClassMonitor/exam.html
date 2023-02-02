@@ -3,6 +3,7 @@
 
 {% block body %}
     <div>
+        {% include "ClassMonitor/navbar.html" %}
         <h1>Exam started</h1>
         <h2>Class Code: {{ class_code }}</h2>
         <h2>Students</h2>
@@ -38,6 +39,4 @@
             <input type="submit" value="End Exam">
         </form>
     </div>
-
-
 {% endblock %}

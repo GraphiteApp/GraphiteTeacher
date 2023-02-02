@@ -3,19 +3,14 @@
 
 {% block body %}
     <script src="{% static 'ClassMonitor/javascript/index.js' %}"></script>
-    <div>
-        <h1>Index</h1>
-        <h2>Welcome, {{ user }}!</h2>
+    {% include "ClassMonitor/navbar.html" %}
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h1>Welcome, {{ user }}!</h1>
         <p>
             Your class code is: <b>{{ class_code }}</b>
         </p>
-        <form method="post">
-            {% csrf_token %}
-            <button id="start_exam">{% if exam_started %} View exam {% else %} Start Exam {% endif %}</button>
-        </form>
-
-        <a href="/logout">Logout</a>
+        <p>
+            To start an exam, click the exam button
+        </p>
     </div>
-
-
 {% endblock %}
