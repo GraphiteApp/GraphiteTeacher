@@ -2,41 +2,46 @@
 {% load static %}
 
 {% block body %}
-    <div>
-        {% include "ClassMonitor/navbar.html" %}
+    {% include "ClassMonitor/navbar.html" %}
+    <div class="d-flex flex-column justify-content-center align-items-center">
         <h1>Exam started</h1>
-        <h2>Class Code: {{ class_code }}</h2>
-        <h2>Students</h2>
-        {% if students_length %}
-            <ul>
-                {% for student in students %}
-                    <li>{{ student.username }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No students</p>
-        {% endif %}
-
-        <h2>
+        <h3 class="mt-4">Class code</h3>
+        <h3><b>{{ class_code }}</b></h3>
+        <h3 class="mt-4">Exam Students</h3>
+        <div class="mt-2">
+            {% if students_length %}
+                <ul>
+                    {% for student in students %}
+                        <li>{{ student.username }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No students</p>
+            {% endif %}
+        </div>
+        <h2 class="mt-4">
             Allowed calculators
         </h2>
         <form action="/exam" method="post">
             {% csrf_token %}
             <input type="hidden" name="type" value="update_calculators">
             {% for calculator in calculators %}
-                <label>
-                    <input type="checkbox" name="{{ calculator.name }}" value="{{ calculator.name }}" {% if calculator.isAllowed %}checked{% endif %}>
-                    {{ calculator.name }}
-                    <br>
-                </label>
+                <div>
+                    <label>
+                        <input class="mt-2" type="checkbox" name="{{ calculator.name }}" value="{{ calculator.name }}" {% if calculator.isAllowed %}checked{% endif %}>
+                        {{ calculator.name }}
+                        <br>
+                    </label>
+                </div>
+
             {% endfor %}
-            <input type="submit" value="Update">
+            <input type="submit" value="Update" class="btn btn-primary mt-2">
         </form>
 
-        <form action="/exam" method="post">
+        <form action="/exam" method="post" class="mt-2">
             {% csrf_token %}
             <input type="hidden" name="type" value="end_exam">
-            <input type="submit" value="End Exam">
+            <input type="submit" value="End Exam" class="btn btn-danger mt-2">
         </form>
     </div>
 {% endblock %}
