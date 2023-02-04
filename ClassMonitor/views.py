@@ -91,6 +91,11 @@ def exam(request):
     user = request.user
     profile = models.Profile.objects.get(user=user)
 
+    # check if exam has started
+    if not models.Profile.objects.get(user=request.user).examStarted:
+        # mark exam as started
+        models.Profile.objects.filter(user=request.user).update(examStarted=True)
+
     # probably a better way to do this
     userCalculators = utils.Calculator.get_calculators(profile.classCode)
 
