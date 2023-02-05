@@ -34,8 +34,6 @@ def index(request):
 
 def login_page(request):
     if request.method == 'POST':
-        print(request.POST['username'])
-        print(request.POST['password'])
         user = authenticate(
             request,
             username=request.POST['username'],
@@ -99,8 +97,6 @@ def exam(request):
     # probably a better way to do this
     userCalculators = utils.Calculator.get_calculators(profile.classCode)
 
-    print(userCalculators)
-
     if request.method == 'POST':
         request_type = request.POST['type']
         if request_type == 'end_exam':
@@ -120,7 +116,7 @@ def exam(request):
             utils.Calculator.update_calculators(user, userCalculators)
 
     return render(request, './ClassMonitor/exam.html', {
-        'students': models.Student.objects.filter(teacher=user),
+        'students': sorted(models.Student.objects.filter(teacher=user), key=lambda x: x.username),
         'students_length': len(models.Student.objects.filter(teacher=user)),
         'class_code': models.Profile.objects.get(user=user).classCode if models.Profile.objects.filter(
             user=user).exists() else "no class code",
