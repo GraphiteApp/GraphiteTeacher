@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ClassMonitor', '0003_profile_examstarted_student_profile_students'),
+        ('Graphite', '0003_profile_examstarted_student_profile_students'),
     ]
 
     operations = [

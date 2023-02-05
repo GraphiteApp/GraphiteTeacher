@@ -1,7 +1,7 @@
 StartOnlineFedora:
-    cd /home/admin/ClassMonitorTeacher
+    cd /home/admin/GraphiteTeacher
     git pull
     python3 manage.py migrate
     python3 manage.py makemigrations
     sudo systemctl reload nginx
-    nohup gunicorn ClassMonitorTeacher.wsgi:application --bind 127.0.1.1:8001
+    nohup gunicorn GraphiteTeacher.wsgi:application --bind 127.0.1.1:8001

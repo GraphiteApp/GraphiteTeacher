@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('ClassMonitor', '0002_profile_delete_teacher'),
+        ('Graphite', '0002_profile_delete_teacher'),
     ]
 
     operations = [
@@ -29,6 +29,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='profile',
             name='students',
-            field=models.ManyToManyField(blank=True, to='ClassMonitor.student'),
+            field=models.ManyToManyField(blank=True, to='Graphite.student'),
         ),
     ]

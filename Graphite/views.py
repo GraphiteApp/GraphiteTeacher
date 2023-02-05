@@ -23,7 +23,7 @@ def index(request):
         # redirect to exam
         return redirect('/exam')
 
-    return render(request, './ClassMonitor/index.html', {
+    return render(request, './Graphite/index.html', {
         'class_code': models.Profile.objects.get(user=request.user).classCode if models.Profile.objects.filter(
             user=request.user).exists() else "no class code",
         'user': request.user,
@@ -45,7 +45,7 @@ def login_page(request):
 
         return HttpResponse('Invalid username or password')
 
-    return render(request, './ClassMonitor/login.html')
+    return render(request, './Graphite/login.html')
 
 
 def register(request):
@@ -72,7 +72,7 @@ def register(request):
 
         return redirect('login')
 
-    return render(request, './ClassMonitor/register.html')
+    return render(request, './Graphite/register.html')
 
 
 def logout_page(request):
@@ -115,7 +115,7 @@ def exam(request):
 
             utils.Calculator.update_calculators(user, userCalculators)
 
-    return render(request, './ClassMonitor/exam.html', {
+    return render(request, './Graphite/exam.html', {
         'students': sorted(models.Student.objects.filter(teacher=user), key=lambda x: x.username),
         'students_length': len(models.Student.objects.filter(teacher=user)),
         'class_code': models.Profile.objects.get(user=user).classCode if models.Profile.objects.filter(

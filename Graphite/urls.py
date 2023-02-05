@@ -1,4 +1,4 @@
-# urls for ClassMonitor
+# urls for Graphite
 
 from django.urls import path
 
