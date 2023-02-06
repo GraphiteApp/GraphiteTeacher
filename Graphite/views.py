@@ -122,3 +122,10 @@ def exam(request):
             user=user).exists() else "no class code",
         'calculators': userCalculators,
     })
+
+
+def exam_video(request):
+    if not utils.check_login(request):
+        return redirect('login')
+
+    return render(request, './Graphite/exam_video.html')

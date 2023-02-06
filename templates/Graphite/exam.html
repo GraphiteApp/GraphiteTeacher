@@ -38,7 +38,9 @@
             <input type="submit" value="Update" class="btn btn-primary mt-2">
         </form>
 
-        <form action="/exam" method="post" class="mt-2">
+        <a class="btn btn-primary mt-4" href="/exam_video">View Student Screens</a>
+
+        <form action="/exam" method="post" class="mt-4">
             {% csrf_token %}
             <input type="hidden" name="type" value="end_exam">
             <input type="submit" value="End Exam" class="btn btn-danger mt-2">
