@@ -116,8 +116,6 @@ def exam(request):
             utils.Calculator.update_calculators(user, userCalculators)
 
     return render(request, './Graphite/exam.html', {
-        'students': sorted(models.Student.objects.filter(teacher=user), key=lambda x: x.username),
-        'students_length': len(models.Student.objects.filter(teacher=user)),
         'class_code': models.Profile.objects.get(user=user).classCode if models.Profile.objects.filter(
             user=user).exists() else "no class code",
         'calculators': userCalculators,
