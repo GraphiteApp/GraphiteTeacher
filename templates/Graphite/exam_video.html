@@ -5,6 +5,14 @@
     {% include 'Graphite/navbar.html' %}
 
     <div>
-        
+        {% for i in rowNum %}
+            <div class="row" style="height:45vh;">
+                {% for j in columnNum %}
+                    <div class="col display">
+                        {{ i }}, {{ j }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

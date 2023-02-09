@@ -128,4 +128,7 @@ def exam_video(request):
     if not utils.check_login(request):
         return redirect('login')
 
-    return render(request, './Graphite/exam_video.html')
+    return render(request, './Graphite/exam_video.html', {
+        "rowNum": range(1, 3),
+        "columnNum": range(1, 6),
+    })
