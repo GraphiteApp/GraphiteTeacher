@@ -118,8 +118,8 @@ def get_exam_data(request):
         # get classCode from user
         class_code = Profile.objects.get(user=request.user).classCode
 
-        # get students
-        students = sorted(Student.objects.filter(teacher=request.user), key=lambda x: x.username)
+        # get student usernames sorted by username
+        students = [student.username for student in Student.objects.filter(teacher=request.user).order_by('username')]
 
         # get allowed calculators
         allowed_calculators = utils.Calculator.get_allowed_calculators(class_code)
@@ -134,8 +134,6 @@ def get_exam_data(request):
             'allowed_calculators': allowed_calculators,
             'exam_started': exam_started
         })
-
-        print(response.content)
 
         return response
 
