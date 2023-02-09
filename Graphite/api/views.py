@@ -37,12 +37,14 @@ def join_exam(request):
 
         # check if student exists
         if Student.objects.filter(username=username).exists():
-            response.status_code = 400
-            response.content = 'Student already exists'
-            return response
-
-        # add student to students
-        Student.objects.create(username=username, teacher=teacher.user).save()
+            student = Student.objects.get(username=username)
+            if student.teacher is not None:
+                response.status_code = 400
+                response.content = 'Student already exists'
+                return response
+        else:
+            # add student to students
+            Student.objects.create(username=username, teacher=teacher.user).save()
 
         # add student to students
         teacher.students.add(Student.objects.get(username=username))
@@ -94,8 +96,26 @@ def leave_exam(request):
             response.content = 'Student does not exist'
             return response
 
+        student = Student.objects.get(username=username)
+        teacher = Profile.objects.get(classCode=class_code)
+
+        if student.teacher is not teacher.user:
+            response.status_code = 400
+            response.content = 'Student is not in this exam'
+            return response
+
+        # add student to left_students
+        Profile.objects.get(classCode=class_code).left_students.add(student)
+
+        print(student.teacher)
+
+        # remove teacher from student
+        student.teacher = None
+
+        student.save()
+
         # remove student from students
-        Student.objects.get(username=username).delete()
+        Profile.objects.get(classCode=class_code).students.remove(student)
 
         response.status_code = 200
         response.content = 'Left exam'
@@ -118,8 +138,9 @@ def get_exam_data(request):
         # get classCode from user
         class_code = Profile.objects.get(user=request.user).classCode
 
-        # get student usernames sorted by username
-        students = [student.username for student in Student.objects.filter(teacher=request.user).order_by('username')]
+        # get student from teacher sorted by username
+        students = Profile.objects.get(classCode=class_code).students.all().order_by('username')
+        students = [student.username for student in students]
 
         # get allowed calculators
         allowed_calculators = utils.Calculator.get_allowed_calculators(class_code)
