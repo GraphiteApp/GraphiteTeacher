@@ -1,3 +1,5 @@
+const timeout = 2500
+
 async function getData() {
     let url = '/api/get_exam_data'
 
@@ -32,11 +34,16 @@ function updateStudents(data) {
     }
 }
 
-window.onload = async function () {
-    // wait for data to load
+async function updateExam() {
     let data = await getData()
 
     if (data) {
         updateStudents(data)
     }
+
+    setTimeout(updateExam, timeout)
+}
+
+window.onload = function () {
+    updateExam().then()
 }
