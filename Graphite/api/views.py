@@ -103,3 +103,40 @@ def leave_exam(request):
         return response
 
     return HttpResponse('Invalid request method')
+
+
+@csrf_exempt
+def get_exam_data(request):
+    if request.method == 'GET':
+        # if authed
+        if not utils.check_login(request):
+            return HttpResponse('Not logged in')
+
+        # return exam students, allowed_calculators, and exam_started
+        response = HttpResponse()
+
+        # get classCode from user
+        class_code = Profile.objects.get(user=request.user).classCode
+
+        # get students
+        students = sorted(Student.objects.filter(teacher=request.user), key=lambda x: x.username)
+
+        # get allowed calculators
+        allowed_calculators = utils.Calculator.get_allowed_calculators(class_code)
+
+        # get exam started
+        exam_started = Profile.objects.get(user=request.user).examStarted
+
+        # return json
+        response.status_code = 200
+        response.content = json.dumps({
+            'students': students,
+            'allowed_calculators': allowed_calculators,
+            'exam_started': exam_started
+        })
+
+        print(response.content)
+
+        return response
+
+    return HttpResponse('Invalid request method')
