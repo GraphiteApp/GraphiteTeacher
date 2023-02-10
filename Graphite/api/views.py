@@ -99,7 +99,7 @@ def leave_exam(request):
         student = Student.objects.get(username=username)
         teacher = Profile.objects.get(classCode=class_code)
 
-        if student.teacher is not teacher.user:
+        if student.teacher != teacher.user:
             response.status_code = 400
             response.content = 'Student is not in this exam'
             return response
@@ -139,7 +139,7 @@ def get_exam_data(request):
         class_code = Profile.objects.get(user=request.user).classCode
 
         # get student from teacher sorted by username
-        students = Profile.objects.get(classCode=class_code).students.all().order_by('username')
+        students = Profile.objects.get(classCode=class_code).students.all()
         students = [student.username for student in students]
 
         # get allowed calculators
@@ -148,12 +148,16 @@ def get_exam_data(request):
         # get exam started
         exam_started = Profile.objects.get(user=request.user).examStarted
 
+        # left students
+        left_students = [student.username for student in Profile.objects.get(classCode=class_code).left_students.all()]
+
         # return json
         response.status_code = 200
         response.content = json.dumps({
             'students': students,
             'allowed_calculators': allowed_calculators,
-            'exam_started': exam_started
+            'exam_started': exam_started,
+            'left_students': left_students
         })
 
         return response

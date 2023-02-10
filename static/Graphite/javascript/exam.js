@@ -24,6 +24,7 @@ function updateStudents(data) {
     if (data.students.length) {
         // clear list
         studentList.innerHTML = ''
+        data.students = data.students.sort()
         data.students.forEach((student) => {
             let studentItem = document.createElement('li')
             studentItem.innerHTML = student
