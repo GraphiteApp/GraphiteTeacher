@@ -1,4 +1,7 @@
 .display {
     height: 50%;
-    background-color: grey;
+}
+
+.left {
+    color: red;
 }

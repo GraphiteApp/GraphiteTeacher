@@ -46,8 +46,21 @@ def join_exam(request):
             # add student to students
             Student.objects.create(username=username, teacher=teacher.user).save()
 
+        student = Student.objects.get(username=username)
+
+        # if the student has left the same exam, remove them from left_students
+        if Profile.objects.filter(classCode=class_code, left_students=student).exists():
+            teacher.left_students.remove(student)
+
         # add student to students
         teacher.students.add(Student.objects.get(username=username))
+
+        teacher.save()
+
+        # add teacher to student
+        student.teacher = teacher.user
+
+        student.save()
 
         response.status_code = 200
         response.content = 'Joined exam'
@@ -106,8 +119,6 @@ def leave_exam(request):
 
         # add student to left_students
         Profile.objects.get(classCode=class_code).left_students.add(student)
-
-        print(student.teacher)
 
         # remove teacher from student
         student.teacher = None

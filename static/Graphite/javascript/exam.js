@@ -21,12 +21,20 @@ async function getData() {
 function updateStudents(data) {
     let studentList = document.getElementById('student-list')
 
-    if (data.students.length) {
+    if (data.students.length + data.left_students.length) {
         // clear list
         studentList.innerHTML = ''
+        data.students = data.students.concat(data.left_students)
         data.students = data.students.sort()
         data.students.forEach((student) => {
-            let studentItem = document.createElement('li')
+            let studentItem
+            if (data.left_students.includes(student)) {
+                studentItem = document.createElement('li')
+                student = student + ' (left)'
+                studentItem.classList.add('left')
+            } else {
+                studentItem = document.createElement('li')
+            }
             studentItem.innerHTML = student
             studentList.appendChild(studentItem)
         })
