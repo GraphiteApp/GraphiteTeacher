@@ -1,4 +1,4 @@
-const timeout = 2500
+const timeout = 1000
 
 async function getData() {
     let url = '/api/get_exam_data'
