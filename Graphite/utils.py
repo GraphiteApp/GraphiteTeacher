@@ -52,3 +52,7 @@ class Calculator:
 
 def check_login(request):
     return request.user.is_authenticated
+
+
+def exam_started(user):
+    return Profile.objects.get(user=user).examStarted
