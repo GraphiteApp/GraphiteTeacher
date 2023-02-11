@@ -27,7 +27,7 @@ def index(request):
         'class_code': models.Profile.objects.get(user=request.user).classCode if models.Profile.objects.filter(
             user=request.user).exists() else "no class code",
         'user': request.user,
-        'exam_started': utils.exam_started(request),
+        'exam_started': utils.exam_started(request.user),
     })
 
 
@@ -127,7 +127,7 @@ def exam_video(request):
         return redirect('login')
 
     # if not exam started, redirect to exam
-    if not utils.exam_started(request):
+    if not utils.exam_started(request.user):
         return redirect('/exam')
 
     return render(request, './Graphite/exam_video.html', {
