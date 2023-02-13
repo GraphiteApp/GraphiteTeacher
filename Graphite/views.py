@@ -104,6 +104,9 @@ def exam(request):
             models.Profile.objects.get(user=user).students.clear()
             models.Student.objects.filter(teacher=user).delete()
 
+            # clear left_students
+            models.Profile.objects.get(user=user).left_students.clear()
+
             # clear calculators
             utils.Calculator.reset_calculators(user)
             return redirect('/')
