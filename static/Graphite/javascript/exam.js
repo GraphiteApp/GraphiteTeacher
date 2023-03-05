@@ -21,25 +21,46 @@ async function getData() {
 function updateStudents(data) {
     let studentList = document.getElementById('student-list')
 
+    studentList.innerHTML = ''
+
     if (data.students.length + data.left_students.length) {
         // clear list
-        studentList.innerHTML = ''
         data.students = data.students.concat(data.left_students)
         data.students = data.students.sort()
+
         data.students.forEach((student) => {
-            let studentItem
+            let studentItem = document.createElement('tr')
+            let studentName = document.createElement('td')
+            let studentStatus = document.createElement('td')
+            studentName.scope = 'row'
+            studentName.innerText = student
+            studentItem.appendChild(studentName)
+
             if (data.left_students.includes(student)) {
-                studentItem = document.createElement('li')
-                student = student + ' (left)'
-                studentItem.classList.add('left')
+                studentStatus.innerText = 'Left'
+                studentStatus.style.color = 'red'
             } else {
-                studentItem = document.createElement('li')
+                studentStatus.innerText = 'Present'
+                studentStatus.style.color = 'green'
             }
-            studentItem.innerHTML = student
+
+            studentItem.appendChild(studentStatus)
+
+            let removeButton = document.createElement('td')
+            let removeButtonButton = document.createElement('button')
+            removeButtonButton.className = 'btn btn-outline-danger btn-sm'
+
+            let removeButtonText = document.createElement('i')
+            removeButtonText.className = 'bi bi-x'
+
+            removeButtonButton.appendChild(removeButtonText)
+
+            removeButton.appendChild(removeButtonButton)
+
+            studentItem.appendChild(removeButton)
+
             studentList.appendChild(studentItem)
         })
-    } else {
-        studentList.innerHTML = 'No students found'
     }
 }
 
