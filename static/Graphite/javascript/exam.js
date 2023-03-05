@@ -18,6 +18,14 @@ async function getData() {
     })
 }
 
+function sortNames(a, b) {
+    if (a.toLowerCase() < b.toLowerCase()) {
+        return 0
+    }
+
+    return 1
+}
+
 function updateStudents(data) {
     let studentList = document.getElementById('student-list')
 
@@ -26,15 +34,19 @@ function updateStudents(data) {
     if (data.students.length + data.left_students.length) {
         // clear list
         data.students = data.students.concat(data.left_students)
-        data.students = data.students.sort()
+        data.students = data.students.sort(sortNames)
 
         data.students.forEach((student) => {
             let studentItem = document.createElement('tr')
+
             let studentName = document.createElement('td')
-            let studentStatus = document.createElement('td')
             studentName.scope = 'row'
             studentName.innerText = student
+            studentName.className = 'text-align-center'
+
             studentItem.appendChild(studentName)
+
+            let studentStatus = document.createElement('td')
 
             if (data.left_students.includes(student)) {
                 studentStatus.innerText = 'Left'
@@ -44,9 +56,13 @@ function updateStudents(data) {
                 studentStatus.style.color = 'green'
             }
 
+            studentStatus.className = 'text-align-center'
+
             studentItem.appendChild(studentStatus)
 
             let removeButton = document.createElement('td')
+            removeButton.className = 'text-align-center'
+
             let removeButtonButton = document.createElement('button')
             removeButtonButton.className = 'btn btn-outline-danger btn-sm'
 
