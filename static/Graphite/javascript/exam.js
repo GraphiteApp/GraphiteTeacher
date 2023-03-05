@@ -26,6 +26,42 @@ function sortNames(a, b) {
     return 1
 }
 
+function remove_student(studentName) {
+    let url = '/api/remove_student'
+
+    let cookies = document.cookie.split(';')
+    let csrfToken = ''
+
+    cookies.forEach((cookie) => {
+        if (cookie.includes('csrftoken')) {
+            csrfToken = cookie.split('=')[1]
+        }
+    });
+
+    let data = {
+        'username': studentName,
+        'csrfmiddlewaretoken': csrfToken
+    }
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(data)
+    }).then((response) => {
+        return response.json()
+    }).then((data) => {
+        return data
+    }).catch((error) => {
+        console.log(error)
+        return null
+    })
+
+    updateExam().then()
+}
+
 function updateStudents(data) {
     let studentList = document.getElementById('student-list')
 
@@ -38,6 +74,7 @@ function updateStudents(data) {
 
         data.students.forEach((student) => {
             let studentItem = document.createElement('tr')
+            studentItem.id = "student-" + student
 
             let studentName = document.createElement('td')
             studentName.scope = 'row'
@@ -68,6 +105,9 @@ function updateStudents(data) {
 
             let removeButtonText = document.createElement('i')
             removeButtonText.className = 'bi bi-x'
+            removeButtonButton.onclick = function () {
+                remove_student(student)
+            }
 
             removeButtonButton.appendChild(removeButtonText)
 

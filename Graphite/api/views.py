@@ -174,3 +174,31 @@ def get_exam_data(request):
         return response
 
     return HttpResponse('Invalid request method')
+
+
+def remove_student(request):
+    if request.method == 'GET':
+        return HttpResponse('Invalid request method')
+
+    # if authed
+    if not utils.check_login(request):
+        return HttpResponse('Not logged in')
+
+    # check if username is in request
+    body = json.loads(request.body)
+    if 'username' not in body:
+        return HttpResponse('Missing username')
+
+    username = body['username']
+
+    if not Student.objects.filter(username=username).exists():
+        return HttpResponse('Student does not exist')
+
+    # if student is not in the current user's exam
+    if Student.objects.get(username=username).teacher != request.user:
+        return HttpResponse('Student is not in this exam')
+
+    # delete student
+    Student.objects.get(username=username).delete()
+
+    return HttpResponse('Student removed')

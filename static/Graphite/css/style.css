@@ -17,3 +17,8 @@
 .text-align-left {
     text-align: left;
 }
+
+.table-scrollable {
+    overflow: auto;
+    height: 60%;
+}
