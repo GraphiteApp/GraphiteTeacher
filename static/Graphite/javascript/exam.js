@@ -120,11 +120,48 @@ function updateStudents(data) {
     }
 }
 
+function updateResources(data) {
+    let resourcesList = document.getElementById('resources-list')
+
+    resourcesList.innerHTML = ''
+
+    for (let key in data.resources) {
+        let enabled = data.resources[key]
+        console.log(key, enabled)
+        let resourceItem = document.createElement('tr')
+        resourceItem.id = "resource-" + key
+
+        let resourceName = document.createElement('td')
+        resourceName.scope = 'row'
+        resourceName.innerText = key
+        resourceName.className = 'text-align-center'
+
+        resourceItem.appendChild(resourceName)
+
+        let resourceStatus = document.createElement('td')
+
+        if (enabled) {
+            resourceStatus.innerText = 'Enabled'
+            resourceStatus.style.color = 'green'
+        } else {
+            resourceStatus.innerText = 'Disabled'
+            resourceStatus.style.color = 'red'
+        }
+
+        resourceStatus.className = 'text-align-center'
+
+        resourceItem.appendChild(resourceStatus)
+
+        resourcesList.appendChild(resourceItem)
+    }
+}
+
 async function updateExam() {
     let data = await getData()
 
     if (data) {
         updateStudents(data)
+        updateResources(data)
     }
 
     setTimeout(updateExam, timeout)
