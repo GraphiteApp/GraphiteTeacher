@@ -7,7 +7,7 @@ from . import models
 import random
 
 
-calculators = [
+resources = [
     'Basic',
     'Scientific',
     'Graphing',
@@ -83,7 +83,7 @@ def exam(request):
     if not utils.check_login(request):
         return redirect('login')
 
-    global calculators
+    global resources
 
     user = request.user
     profile = models.Profile.objects.get(user=user)
@@ -94,7 +94,7 @@ def exam(request):
         models.Profile.objects.filter(user=request.user).update(examStarted=True)
 
     # probably a better way to do this
-    userCalculators = utils.Calculator.get_calculators(profile.classCode)
+    userResources = utils.Resource.get_resources(profile.classCode)
 
     if request.method == 'POST':
         request_type = request.POST['type']
@@ -107,20 +107,20 @@ def exam(request):
             # clear left_students
             models.Profile.objects.get(user=user).left_students.clear()
 
-            # clear calculators
-            utils.Calculator.reset_calculators(user)
+            # clear resources
+            utils.Resource.disable_resources(user)
             return redirect('/')
 
-        if request_type == 'update_calculators':
-            for calculator in userCalculators:
-                calculator.isAllowed = calculator.name in request.POST
+        if request_type == 'update_resources':
+            for resource in userResources:
+                resource.isAllowed = resource.name in request.POST
 
-            utils.Calculator.update_calculators(user, userCalculators)
+            utils.Resource.update_resources(user, userResources)
 
     return render(request, './Graphite/exam.html', {
         'class_code': models.Profile.objects.get(user=user).classCode if models.Profile.objects.filter(
             user=user).exists() else "no class code",
-        'calculators': userCalculators,
+        'resources': userResources,
         'exam_started': True,
     })
 

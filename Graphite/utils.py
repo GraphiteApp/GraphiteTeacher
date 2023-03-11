@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import Profile
 
 
-class Calculator:
+class Resource:
     isAllowed = False
     name = ''
 
@@ -12,42 +12,39 @@ class Calculator:
         self.isAllowed = is_allowed
 
     @staticmethod
-    def get_calculators(class_code):
+    def get_resources(class_code):
         profile = Profile.objects.get(classCode=class_code)
-        return [
-            Calculator('Basic', profile.basic_calculator),
-            Calculator('Scientific', profile.scientific_calculator),
-            Calculator('Graphing', profile.graphing_calculator),
-        ]
+        resources = {}
+
+        for resource in profile.allowed_resources.all():
+            resources[resource.name] = True
+
+        for resource in profile.disabled_resources.all():
+            resources[resource.name] = False
+
+        return resources
 
     @staticmethod
-    def update_calculators(user, calculators):
-        for calculator in calculators:
+    def update_resources(user, resources):
+        for resource in resources:
             profile = Profile.objects.get(user=user)
-            if calculator.name == 'Graphing':
-                profile.graphing_calculator = calculator.isAllowed
-            elif calculator.name == 'Scientific':
-                profile.scientific_calculator = calculator.isAllowed
-            elif calculator.name == 'Basic':
-                profile.basic_calculator = calculator.isAllowed
+            if resource.isAllowed:
+                profile.allowed_resources.add(resource)
+                profile.disabled_resources.remove(resource)
+            else:
+                profile.allowed_resources.remove(resource)
+                profile.disabled_resources.add(resource)
+
             profile.save()
 
     @staticmethod
-    def reset_calculators(user):
+    def disable_resources(user):
         profile = Profile.objects.get(user=user)
-        profile.basic_calculator = False
-        profile.scientific_calculator = False
-        profile.graphing_calculator = False
-        profile.save()
+        for resource in Resource.get_resources(profile.classCode):
+            profile.allowed_resources.remove(resource)
+            profile.disabled_resources.add(resource)
 
-    @staticmethod
-    def get_allowed_calculators(class_code):
-        profile = Profile.objects.get(classCode=class_code)
-        return {
-            'basic': profile.basic_calculator,
-            'scientific': profile.scientific_calculator,
-            'graphing': profile.graphing_calculator,
-        }
+        profile.save()
 
 
 def check_login(request):

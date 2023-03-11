@@ -13,16 +13,16 @@
             <p>Loading...</p>
         </div>
         <h2 class="mt-4">
-            Allowed Calculators
+            Allowed Resources
         </h2>
         <form action="/exam" method="post">
             {% csrf_token %}
-            <input type="hidden" name="type" value="update_calculators">
-            {% for calculator in calculators %}
+            <input type="hidden" name="type" value="update_resources">
+            {% for resource in resources %}
                 <div>
                     <label>
-                        <input class="mt-2" type="checkbox" name="{{ calculator.name }}" value="{{ calculator.name }}" {% if calculator.isAllowed %}checked{% endif %}>
-                        {{ calculator.name }}
+                        <input class="mt-2" type="checkbox" name="{{ resource.name }}" value="{{ resource.name }}" {% if resource.isAllowed %}checked{% endif %}>
+                        {{ resource.name }}
                         <br>
                     </label>
                 </div>

@@ -70,7 +70,7 @@ def join_exam(request):
 
 
 @csrf_exempt
-def get_calculators(request):
+def get_resources(request):
     if request.method == 'GET':
         # get classCode
         response = HttpResponse()
@@ -83,7 +83,7 @@ def get_calculators(request):
             return response
 
         response.status_code = 200
-        response.content = json.dumps(utils.Calculator.get_allowed_calculators(class_code))
+        response.content = json.dumps(utils.Resource.get_resources(class_code))
         return response
 
     return HttpResponse('Invalid request method')
@@ -143,7 +143,7 @@ def get_exam_data(request):
         if not utils.check_login(request):
             return HttpResponse('Not logged in')
 
-        # return exam students, allowed_calculators, and exam_started
+        # return exam students, allowed_resources, and exam_started
         response = HttpResponse()
 
         # get classCode from user
@@ -153,8 +153,8 @@ def get_exam_data(request):
         students = Profile.objects.get(classCode=class_code).students.all()
         students = [student.username for student in students]
 
-        # get allowed calculators
-        allowed_calculators = utils.Calculator.get_allowed_calculators(class_code)
+        # get resources
+        resources = utils.Resource.get_resources(class_code)
 
         # get exam started
         exam_started = Profile.objects.get(user=request.user).examStarted
@@ -166,7 +166,7 @@ def get_exam_data(request):
         response.status_code = 200
         response.content = json.dumps({
             'students': students,
-            'allowed_calculators': allowed_calculators,
+            'resources': resources,
             'exam_started': exam_started,
             'left_students': left_students
         })
