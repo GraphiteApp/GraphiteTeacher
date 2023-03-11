@@ -19,6 +19,8 @@
 }
 
 .table-scrollable {
-    overflow: auto;
+    overflow: scroll;
     max-height: 25em;
+    max-width: 25em;
+    height: 25em;
 }
