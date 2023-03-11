@@ -120,27 +120,34 @@ function updateStudents(data) {
     }
 }
 
+function toggleResource(resourceName, isAllowed) {
+    // TODO: implement
+}
+
 function updateResources(data) {
     let resourcesList = document.getElementById('resources-list')
 
     resourcesList.innerHTML = ''
 
     for (let key in data.resources) {
-        let enabled = data.resources[key]
-        console.log(key, enabled)
+        let resource = data.resources[key]
+
+
         let resourceItem = document.createElement('tr')
         resourceItem.id = "resource-" + key
 
+
         let resourceName = document.createElement('td')
         resourceName.scope = 'row'
-        resourceName.innerText = key
+        resourceName.innerText = resource.name
         resourceName.className = 'text-align-center'
 
         resourceItem.appendChild(resourceName)
 
+
         let resourceStatus = document.createElement('td')
 
-        if (enabled) {
+        if (resource.isAllowed) {
             resourceStatus.innerText = 'Enabled'
             resourceStatus.style.color = 'green'
         } else {
@@ -151,6 +158,44 @@ function updateResources(data) {
         resourceStatus.className = 'text-align-center'
 
         resourceItem.appendChild(resourceStatus)
+
+
+        let resourceURL = document.createElement('td')
+        resourceURL.className = 'text-align-center'
+
+        let resourceURLLink = document.createElement('a')
+        resourceURLLink.href = resource.url
+        resourceURLLink.innerText = resource.url
+
+        resourceURL.appendChild(resourceURLLink)
+
+        resourceItem.appendChild(resourceURL)
+
+
+        let resourceButton = document.createElement('td')
+        resourceButton.className = 'text-align-center'
+
+        let resourceButtonButton = document.createElement('button')
+
+        if (resource.isAllowed) {
+            resourceButtonButton.className = 'btn btn-outline-danger btn-sm'
+            resourceButtonButton.innerText = 'Disable'
+        } else {
+            resourceButtonButton.className = 'btn btn-outline-success btn-sm'
+            resourceButtonButton.innerText = 'Enable'
+        }
+
+        resourceButtonButton.onclick = toggleResource(resource.name, resource.isAllowed)
+
+        resourceButton.appendChild(resourceButtonButton)
+
+        resourceItem.appendChild(resourceButton)
+
+        // filler for the add resource button
+        let addResourceFiller = document.createElement('td')
+        addResourceFiller.className = 'text-align-center'
+
+        resourceItem.appendChild(addResourceFiller)
 
         resourcesList.appendChild(resourceItem)
     }

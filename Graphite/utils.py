@@ -7,20 +7,28 @@ class Resource:
     isAllowed = False
     name = ''
 
-    def __init__(self, name, is_allowed):
+    def __init__(self, name, is_allowed, url):
         self.name = name
         self.isAllowed = is_allowed
 
     @staticmethod
     def get_resources(class_code):
         profile = Profile.objects.get(classCode=class_code)
-        resources = {}
+        resources = []
 
         for resource in profile.allowed_resources.all():
-            resources[resource.name] = True
+            resources.append({
+                'name': resource.name,
+                'url': resource.url,
+                'isAllowed': True
+            })
 
         for resource in profile.disabled_resources.all():
-            resources[resource.name] = False
+            resources.append({
+                'name': resource.name,
+                'url': resource.url,
+                'isAllowed': False
+            })
 
         return resources
 
