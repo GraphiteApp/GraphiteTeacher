@@ -202,3 +202,46 @@ def remove_student(request):
     Student.objects.get(username=username).delete()
 
     return HttpResponse('Student removed')
+
+
+def toggle_resource(request):
+    if request.method == 'GET':
+        return HttpResponse('Invalid request method')
+
+    # check auth
+    if not utils.check_login(request):
+        return HttpResponse('Not logged in')
+
+    # check if resource and isEnable are in request
+    body = json.loads(request.body)
+
+    if 'resource' not in body:
+        return HttpResponse('Missing resource')
+
+    if 'isEnable' not in body:
+        return HttpResponse('Missing isEnable')
+
+    if not isinstance(body['isEnable'], bool):
+        return HttpResponse('isEnable must be a boolean')
+
+    resource = body['resource']
+    is_enable = body['isEnable']
+
+    # check if resource is valid
+    resources = utils.Resource.get_resources(Profile.objects.get(user=request.user).classCode)
+
+    # we cannot use in because resources is a list of dicts
+    foundResource = False
+    for r in resources:
+        if r['name'] == resource:
+            foundResource = True
+            break
+
+    print(foundResource)
+    if not foundResource:
+        return HttpResponse('Invalid resource')
+
+    # toggle resource
+    utils.Resource.toggle_resource(Profile.objects.get(user=request.user).classCode, resource, is_enable)
+
+    return HttpResponse('Resource toggled')

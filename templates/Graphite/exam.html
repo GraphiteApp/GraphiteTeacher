@@ -4,40 +4,6 @@
 {% block body %}
     {% include "Graphite/navbar.html" %}
     <script src="{% static 'Graphite/javascript/exam.js' %}"></script>
-    <!--<div class="d-flex flex-column justify-content-center align-items-center">
-        <h1>Exam started</h1>
-        <h3 class="mt-4">Class Code</h3>
-        <h3><b>{{ class_code }}</b></h3>
-        <h3 class="mt-4">Exam Students</h3>
-        <div class="mt-2" id="student-list">
-            <p>Loading...</p>
-        </div>
-        <h2 class="mt-4">
-            Allowed Resources
-        </h2>
-        <form action="/exam" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="type" value="update_resources">
-            {% for resource in resources %}
-                <div>
-                    <label>
-                        <input class="mt-2" type="checkbox" name="{{ resource.name }}" value="{{ resource.name }}" {% if resource.isAllowed %}checked{% endif %}>
-                        {{ resource.name }}
-                        <br>
-                    </label>
-                </div>
-            {% endfor %}
-            <input type="submit" value="Update" class="btn btn-primary mt-2">
-        </form>
-
-        <a class="btn btn-primary mt-4" href="/exam_video">View Student Screens</a>
-
-        <form action="/exam" method="post" class="mt-4">
-            {% csrf_token %}
-            <input type="hidden" name="type" value="end_exam">
-            <input type="submit" value="End Exam" class="btn btn-danger mt-2">
-        </form>
-    </div>-->
 
     <div class="container">
         <div class="d-flex flex-column justify-content-center align-items-center">

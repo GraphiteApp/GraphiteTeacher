@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
-from .models import Profile
+from . import models
 
 
 class Resource:
@@ -13,7 +13,7 @@ class Resource:
 
     @staticmethod
     def get_resources(class_code):
-        profile = Profile.objects.get(classCode=class_code)
+        profile = models.Profile.objects.get(classCode=class_code)
         resources = []
 
         for resource in profile.allowed_resources.all():
@@ -35,7 +35,7 @@ class Resource:
     @staticmethod
     def update_resources(user, resources):
         for resource in resources:
-            profile = Profile.objects.get(user=user)
+            profile = models.Profile.objects.get(user=user)
             if resource.isAllowed:
                 profile.allowed_resources.add(resource)
                 profile.disabled_resources.remove(resource)
@@ -47,10 +47,27 @@ class Resource:
 
     @staticmethod
     def disable_resources(user):
-        profile = Profile.objects.get(user=user)
+        profile = models.Profile.objects.get(user=user)
         for resource in Resource.get_resources(profile.classCode):
             profile.allowed_resources.remove(resource)
             profile.disabled_resources.add(resource)
+
+        profile.save()
+
+    @staticmethod
+    def toggle_resource(class_code, resource_name, is_enable):
+        profile = models.Profile.objects.get(classCode=class_code)
+        resource = models.Resource.objects.get(name=resource_name)
+
+        print(resource_name, is_enable)
+        if is_enable:
+            profile.allowed_resources.add(resource)
+            if resource in profile.disabled_resources.all():
+                profile.disabled_resources.remove(resource)
+        else:
+            profile.disabled_resources.add(resource)
+            if resource in profile.allowed_resources.all():
+                profile.allowed_resources.remove(resource)
 
         profile.save()
 
@@ -60,4 +77,4 @@ def check_login(request):
 
 
 def exam_started(user):
-    return Profile.objects.get(user=user).examStarted
+    return models.Profile.objects.get(user=user).examStarted

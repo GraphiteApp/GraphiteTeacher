@@ -1,5 +1,23 @@
 const timeout = 1000
 
+function post(url, data) {
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': data.csrfmiddlewaretoken
+        },
+        body: JSON.stringify(data)
+    }).then((response) => {
+        return response.json()
+    }).then((data) => {
+        return data
+    }).catch((error) => {
+        console.log(error)
+        return null
+    })
+}
+
 async function getData() {
     let url = '/api/get_exam_data'
 
@@ -43,23 +61,9 @@ function remove_student(studentName) {
         'csrfmiddlewaretoken': csrfToken
     }
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
-        },
-        body: JSON.stringify(data)
-    }).then((response) => {
-        return response.json()
-    }).then((data) => {
-        return data
-    }).catch((error) => {
-        console.log(error)
-        return null
+    post(url, data).then(() => {
+        updateExam().then()
     })
-
-    updateExam().then()
 }
 
 function updateStudents(data) {
@@ -121,7 +125,28 @@ function updateStudents(data) {
 }
 
 function toggleResource(resourceName, isAllowed) {
-    // TODO: implement
+    return function () {
+        let url = '/api/toggle_resource'
+
+        let cookies = document.cookie.split(';')
+        let csrfToken = ''
+
+        cookies.forEach((cookie) => {
+            if (cookie.includes('csrftoken')) {
+                csrfToken = cookie.split('=')[1]
+            }
+        });
+
+        let data = {
+            'resource': resourceName,
+            'isEnable': !isAllowed,
+            'csrfmiddlewaretoken': csrfToken
+        }
+
+        post(url, data).then(() => {
+            updateExam().then()
+        })
+    }
 }
 
 function updateResources(data) {
@@ -177,6 +202,9 @@ function updateResources(data) {
 
         let resourceButtonButton = document.createElement('button')
 
+        // set the onclick function
+        resourceButtonButton.onclick = toggleResource(resource.name, resource.isAllowed)
+
         if (resource.isAllowed) {
             resourceButtonButton.className = 'btn btn-outline-danger btn-sm'
             resourceButtonButton.innerText = 'Disable'
@@ -184,8 +212,6 @@ function updateResources(data) {
             resourceButtonButton.className = 'btn btn-outline-success btn-sm'
             resourceButtonButton.innerText = 'Enable'
         }
-
-        resourceButtonButton.onclick = toggleResource(resource.name, resource.isAllowed)
 
         resourceButton.appendChild(resourceButtonButton)
 

@@ -8,4 +8,5 @@ urlpatterns = [
     path('get_resources', views.get_resources, name='get_resources'),
     path('get_exam_data', views.get_exam_data, name='get_exam_data'),
     path('remove_student', views.remove_student, name='remove_student'),
+    path('toggle_resource', views.toggle_resource, name='toggle_resource'),
 ]
