@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from . import utils
 from . import models
 import random
+import urllib.parse
 
 
 resources = [
@@ -96,6 +97,11 @@ def exam(request):
     # probably a better way to do this
     userResources = utils.Resource.get_resources(profile.classCode)
 
+    # create url to add resource
+    addResourceUrl = 'add_resource?' + urllib.parse.urlencode({
+        'class_code': profile.classCode,
+    })
+
     if request.method == 'POST':
         request_type = request.POST['type']
         if request_type == 'end_exam':
@@ -122,6 +128,7 @@ def exam(request):
             user=user).exists() else "no class code",
         'resources': userResources,
         'exam_started': True,
+        'add_resource_url': addResourceUrl,
     })
 
 
