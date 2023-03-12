@@ -149,6 +149,11 @@ function toggleResource(resourceName, isAllowed) {
     }
 }
 
+function deleteResource(resourceName) {
+    // TODO: implement
+    console.log('deleted' + resourceName)
+}
+
 function updateResources(data) {
     let resourcesList = document.getElementById('resources-list')
 
@@ -217,11 +222,24 @@ function updateResources(data) {
 
         resourceItem.appendChild(resourceButton)
 
-        // filler for the add resource button
-        let addResourceFiller = document.createElement('td')
-        addResourceFiller.className = 'text-align-center'
+        let resourceDelete = document.createElement('td')
+        resourceDelete.className = 'text-align-center'
 
-        resourceItem.appendChild(addResourceFiller)
+        let resourceDeleteButton = document.createElement('button')
+        resourceDeleteButton.className = 'btn btn-outline-danger btn-sm'
+
+        let resourceDeleteText = document.createElement('i')
+        resourceDeleteText.className = 'bi bi-trash'
+        resourceDeleteButton.onclick = function () {
+            deleteResource(resource.name)
+        }
+
+        resourceDeleteButton.appendChild(resourceDeleteText)
+
+        resourceDelete.appendChild(resourceDeleteButton)
+
+        resourceItem.appendChild(resourceDelete)
+
 
         resourcesList.appendChild(resourceItem)
     }

@@ -59,7 +59,6 @@ class Resource:
         profile = models.Profile.objects.get(classCode=class_code)
         resource = models.Resource.objects.get(name=resource_name)
 
-        print(resource_name, is_enable)
         if is_enable:
             profile.allowed_resources.add(resource)
             if resource in profile.disabled_resources.all():
