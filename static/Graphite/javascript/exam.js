@@ -1,6 +1,21 @@
 const timeout = 1000
 
+function getCSRFToken() {
+    let cookies = document.cookie.split(';')
+    let token = ''
+
+    cookies.forEach((cookie) => {
+        if (cookie.includes('csrftoken')) {
+            token = cookie.split('=')[1]
+        }
+    });
+
+    return token
+}
+
 function post(url, data) {
+    data['csrfmiddlewaretoken'] = getCSRFToken()
+
     return fetch(url, {
         method: 'POST',
         headers: {
@@ -125,33 +140,24 @@ function updateStudents(data) {
 }
 
 function toggleResource(resourceName, isAllowed) {
-    return function () {
-        let url = '/api/toggle_resource'
-
-        let cookies = document.cookie.split(';')
-        let csrfToken = ''
-
-        cookies.forEach((cookie) => {
-            if (cookie.includes('csrftoken')) {
-                csrfToken = cookie.split('=')[1]
-            }
-        });
-
-        let data = {
-            'resource': resourceName,
-            'isEnable': !isAllowed,
-            'csrfmiddlewaretoken': csrfToken
-        }
-
-        post(url, data).then(() => {
-            updateExam().then()
-        })
-    }
+    post('/api/toggle_resource', {
+        'resource': resourceName,
+        'isEnable': !isAllowed
+    }).then(() => {
+        updateExam().then()
+    })
 }
 
 function deleteResource(resourceName) {
-    // TODO: implement
-    console.log('deleted' + resourceName)
+    if (!confirm('Are you sure you want to delete the resource?')) {
+        return
+    }
+
+    post('/api/delete_resource', {
+        'resource': resourceName
+    }).then(() => {
+        updateExam().then()
+    })
 }
 
 function updateResources(data) {
@@ -208,7 +214,9 @@ function updateResources(data) {
         let resourceButtonButton = document.createElement('button')
 
         // set the onclick function
-        resourceButtonButton.onclick = toggleResource(resource.name, resource.isAllowed)
+        resourceButtonButton.onclick = function () {
+            toggleResource(resource.name, resource.isAllowed)
+        }
 
         if (resource.isAllowed) {
             resourceButtonButton.className = 'btn btn-outline-danger btn-sm'

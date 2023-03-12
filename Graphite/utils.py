@@ -70,6 +70,16 @@ class Resource:
 
         profile.save()
 
+    @staticmethod
+    def delete_resource(class_code, resource_name):
+        profile = models.Profile.objects.get(classCode=class_code)
+        resource = models.Resource.objects.get(name=resource_name)
+
+        profile.allowed_resources.remove(resource)
+        profile.disabled_resources.remove(resource)
+
+        profile.save()
+
 
 def check_login(request):
     return request.user.is_authenticated

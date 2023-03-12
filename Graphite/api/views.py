@@ -237,7 +237,6 @@ def toggle_resource(request):
             foundResource = True
             break
 
-    print(foundResource)
     if not foundResource:
         return HttpResponse('Invalid resource')
 
@@ -245,3 +244,38 @@ def toggle_resource(request):
     utils.Resource.toggle_resource(Profile.objects.get(user=request.user).classCode, resource, is_enable)
 
     return HttpResponse('Resource toggled')
+
+
+def delete_resource(request):
+    if request.method == 'GET':
+        return HttpResponse('Invalid request method')
+
+    # check auth
+    if not utils.check_login(request):
+        return HttpResponse('Not logged in')
+
+    # check if resource is in request
+    body = json.loads(request.body)
+
+    if 'resource' not in body:
+        return HttpResponse('Missing resource')
+
+    resource = body['resource']
+
+    # check if resource is valid
+    resources = utils.Resource.get_resources(Profile.objects.get(user=request.user).classCode)
+
+    # we cannot use in because resources is a list of dicts
+    foundResource = False
+    for r in resources:
+        if r['name'] == resource:
+            foundResource = True
+            break
+
+    if not foundResource:
+        return HttpResponse('Invalid resource')
+
+    # delete resource
+    utils.Resource.delete_resource(Profile.objects.get(user=request.user).classCode, resource)
+
+    return HttpResponse('Resource deleted')
