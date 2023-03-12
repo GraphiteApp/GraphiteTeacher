@@ -87,3 +87,27 @@ def check_login(request):
 
 def exam_started(user):
     return models.Profile.objects.get(user=user).examStarted
+
+
+def start_exam(user):
+    models.Profile.objects.filter(user=user).update(examStarted=True)
+
+    # add default resources as disabled
+    profile = models.Profile.objects.get(user=user)
+
+    resources = {
+        'Graphing Calculator': 'https://www.desmos.com/calculator',
+        'Scientific Calculator': 'https://www.desmos.com/scientific',
+        'Basic Calculator': 'https://www.desmos.com/fourfunction',
+        'Periodic Table': 'https://ptable.com/#Properties'
+    }
+
+    for name, url in resources.items():
+        # either create or get the resource, depending on if it already exists
+        if models.Resource.objects.filter(name=name).exists():
+            resource = models.Resource.objects.get(name=name)
+        else:
+            resource = models.Resource(name=name, url=url)
+            resource.save()
+
+        profile.disabled_resources.add(resource)

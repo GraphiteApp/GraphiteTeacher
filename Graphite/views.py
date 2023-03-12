@@ -91,8 +91,8 @@ def exam(request):
 
     # check if exam has started
     if not models.Profile.objects.get(user=request.user).examStarted:
-        # mark exam as started
-        models.Profile.objects.filter(user=request.user).update(examStarted=True)
+        # start exam
+        utils.start_exam(user)
 
     # probably a better way to do this
     userResources = utils.Resource.get_resources(profile.classCode)
