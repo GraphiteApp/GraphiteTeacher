@@ -47,6 +47,14 @@
             </div>
           </div>
         </div>
+
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <form action="/exam" method="post" class="mt-4">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="end_exam">
+                <input type="submit" value="End Exam" class="btn btn-danger mt-2">
+            </form>
+        </div>
     </div>
 
 {% endblock %}

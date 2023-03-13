@@ -49,8 +49,9 @@ class Resource:
     def disable_resources(user):
         profile = models.Profile.objects.get(user=user)
         for resource in Resource.get_resources(profile.classCode):
-            profile.allowed_resources.remove(resource)
-            profile.disabled_resources.add(resource)
+            resourceObj = models.Resource.objects.get(name=resource['name'])
+            profile.allowed_resources.remove(resourceObj)
+            profile.disabled_resources.add(resourceObj)
 
         profile.save()
 
