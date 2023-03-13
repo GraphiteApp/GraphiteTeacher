@@ -7,14 +7,6 @@ from . import models
 import random
 import urllib.parse
 
-
-resources = [
-    'Basic',
-    'Scientific',
-    'Graphing',
-]
-
-
 def index(request):
     if not utils.check_login(request):
         return redirect('login')
@@ -84,8 +76,6 @@ def exam(request):
     if not utils.check_login(request):
         return redirect('login')
 
-    global resources
-
     user = request.user
     profile = models.Profile.objects.get(user=user)
 
@@ -137,4 +127,27 @@ def exam_video(request):
     return render(request, './Graphite/exam_video.html', {
         "rowNum": range(1, 3),
         "columnNum": range(1, 6),
+    })
+
+
+def add_resource(request):
+    if not utils.check_login(request):
+        return redirect('login')
+
+    # check if resource param is in request
+    resourceName = request.GET.get('resource', '')
+
+    resources = utils.Resource.get_resources(models.Profile.objects.get(user=request.user).classCode)
+
+    resource = {
+        'name': resourceName,
+        'URL': ''
+    }
+
+    # check if resource is valid
+    if resourceName in [resource['name'] for resource in resources]:
+        resource['URL'] = utils.Resource.get_resource(resourceName)['url']
+
+    return render(request, './Graphite/add_resource.html', {
+        'resource': resource,
     })

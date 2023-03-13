@@ -223,7 +223,7 @@ function updateResources(data) {
         let resourceEditText = document.createElement('i')
         resourceEditText.className = 'bi bi-pencil-square'
 
-        resourceEditButton.href = '/add_resource' + '?resource=' + resource.name
+        resourceEditButton.href = '/add_resource' + '?resource=' + encodeURIComponent(resource.name)
 
         resourceEditButton.appendChild(resourceEditText)
 

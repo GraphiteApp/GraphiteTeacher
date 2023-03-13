@@ -1,0 +1,13 @@
+{% extends "Graphite/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <script src="{% static 'Graphite/javascript/index.js' %}"></script>
+    {% include "Graphite/navbar.html" %}
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <!-- TODO: Implement -->
+        Name {{ resource.name }}
+        <br>
+        URL {{ resource.URL }}
+    </div>
+{% endblock %}

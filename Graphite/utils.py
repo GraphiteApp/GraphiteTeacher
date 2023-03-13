@@ -81,6 +81,14 @@ class Resource:
 
         profile.save()
 
+    @staticmethod
+    def get_resource(resource_name):
+        resource = models.Resource.objects.get(name=resource_name)
+        return {
+            'name': resource.name,
+            'url': resource.url
+        }
+
 
 def check_login(request):
     return request.user.is_authenticated
