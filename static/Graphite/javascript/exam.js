@@ -180,34 +180,6 @@ function updateResources(data) {
 
         resourceItem.appendChild(resourceName)
 
-
-        let resourceStatus = document.createElement('td')
-
-        if (resource.isAllowed) {
-            resourceStatus.innerText = 'Enabled'
-            resourceStatus.style.color = 'green'
-        } else {
-            resourceStatus.innerText = 'Disabled'
-            resourceStatus.style.color = 'red'
-        }
-
-        resourceStatus.className = 'text-align-center'
-
-        resourceItem.appendChild(resourceStatus)
-
-
-        let resourceURL = document.createElement('td')
-        resourceURL.className = 'text-align-center'
-
-        let resourceURLLink = document.createElement('a')
-        resourceURLLink.href = resource.url
-        resourceURLLink.innerText = resource.url
-
-        resourceURL.appendChild(resourceURLLink)
-
-        resourceItem.appendChild(resourceURL)
-
-
         let resourceButton = document.createElement('td')
         resourceButton.className = 'text-align-center'
 
@@ -229,6 +201,35 @@ function updateResources(data) {
         resourceButton.appendChild(resourceButtonButton)
 
         resourceItem.appendChild(resourceButton)
+
+        let resourceURL = document.createElement('td')
+        resourceURL.className = 'text-align-center'
+
+        let resourceURLLink = document.createElement('a')
+        resourceURLLink.href = resource.url
+        resourceURLLink.innerText = resource.url
+
+        resourceURL.appendChild(resourceURLLink)
+
+        resourceItem.appendChild(resourceURL)
+
+        // edit resource
+        let resourceEdit = document.createElement('td')
+        resourceEdit.className = 'text-align-center'
+
+        let resourceEditButton = document.createElement('a')
+        resourceEditButton.className = 'btn btn-outline-primary btn-sm'
+
+        let resourceEditText = document.createElement('i')
+        resourceEditText.className = 'bi bi-pencil-square'
+
+        resourceEditButton.href = '/add_resource' + '?resource=' + resource.name
+
+        resourceEditButton.appendChild(resourceEditText)
+
+        resourceEdit.appendChild(resourceEditButton)
+
+        resourceItem.appendChild(resourceEdit)
 
         let resourceDelete = document.createElement('td')
         resourceDelete.className = 'text-align-center'
