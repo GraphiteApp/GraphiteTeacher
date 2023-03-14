@@ -276,6 +276,6 @@ def delete_resource(request):
         return HttpResponse('Invalid resource')
 
     # delete resource
-    utils.Resource.delete_resource(Profile.objects.get(user=request.user).classCode, resource)
+    utils.Resource.delete_resource_from_profile(Profile.objects.get(user=request.user).classCode, resource)
 
     return HttpResponse('Resource deleted')

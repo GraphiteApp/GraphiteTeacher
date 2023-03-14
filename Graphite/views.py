@@ -134,6 +134,22 @@ def add_resource(request):
     if not utils.check_login(request):
         return redirect('login')
 
+    classCode = models.Profile.objects.get(user=request.user).classCode
+
+    if request.method == 'POST':
+        resourceName = request.POST['name']
+        resourceURL = request.POST['url']
+        oldResourceName = request.POST['old_name']
+
+        if oldResourceName != '':
+            # delete old resource
+            utils.Resource.delete_resource(oldResourceName)
+
+        # add new resource
+        utils.Resource.add_resource(classCode, resourceName, resourceURL)
+
+        return redirect('/exam')
+
     # check if resource param is in request
     resourceName = request.GET.get('resource', '')
 

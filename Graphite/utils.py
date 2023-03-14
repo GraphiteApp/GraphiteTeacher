@@ -72,7 +72,7 @@ class Resource:
         profile.save()
 
     @staticmethod
-    def delete_resource(class_code, resource_name):
+    def delete_resource_from_profile(class_code, resource_name):
         profile = models.Profile.objects.get(classCode=class_code)
         resource = models.Resource.objects.get(name=resource_name)
 
@@ -88,6 +88,20 @@ class Resource:
             'name': resource.name,
             'url': resource.url
         }
+
+    @staticmethod
+    def add_resource(class_code, resource_name, url):
+        models.Resource.objects.create(name=resource_name, url=url)
+
+        profile = models.Profile.objects.get(classCode=class_code)
+        resource = models.Resource.objects.get(name=resource_name)
+
+        profile.allowed_resources.add(resource)
+        profile.save()
+
+    @staticmethod
+    def delete_resource(resource_name):
+        models.Resource.objects.get(name=resource_name).delete()
 
 
 def check_login(request):
