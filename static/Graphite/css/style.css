@@ -5,3 +5,25 @@
 .left {
     color: red;
 }
+
+.text-align-center {
+    text-align: center;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.text-align-left {
+    text-align: left;
+}
+
+.table-scrollable {
+    overflow: scroll;
+    max-height: 25em;
+    height: 25em;
+}
+
+.nav-text {
+    font-size: 1.25em;
+}

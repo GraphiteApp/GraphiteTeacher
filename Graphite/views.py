@@ -5,14 +5,7 @@ from django.contrib.auth.models import User
 from . import utils
 from . import models
 import random
-
-
-calculators = [
-    'Basic',
-    'Scientific',
-    'Graphing',
-]
-
+import urllib.parse
 
 def index(request):
     if not utils.check_login(request):
@@ -83,18 +76,16 @@ def exam(request):
     if not utils.check_login(request):
         return redirect('login')
 
-    global calculators
-
     user = request.user
     profile = models.Profile.objects.get(user=user)
 
     # check if exam has started
     if not models.Profile.objects.get(user=request.user).examStarted:
-        # mark exam as started
-        models.Profile.objects.filter(user=request.user).update(examStarted=True)
+        # start exam
+        utils.start_exam(user)
 
     # probably a better way to do this
-    userCalculators = utils.Calculator.get_calculators(profile.classCode)
+    userResources = utils.Resource.get_resources(profile.classCode)
 
     if request.method == 'POST':
         request_type = request.POST['type']
@@ -107,20 +98,20 @@ def exam(request):
             # clear left_students
             models.Profile.objects.get(user=user).left_students.clear()
 
-            # clear calculators
-            utils.Calculator.reset_calculators(user)
+            # clear resources
+            utils.Resource.disable_resources(user)
             return redirect('/')
 
-        if request_type == 'update_calculators':
-            for calculator in userCalculators:
-                calculator.isAllowed = calculator.name in request.POST
+        if request_type == 'update_resources':
+            for resource in userResources:
+                resource.isAllowed = resource.name in request.POST
 
-            utils.Calculator.update_calculators(user, userCalculators)
+            utils.Resource.update_resources(user, userResources)
 
     return render(request, './Graphite/exam.html', {
         'class_code': models.Profile.objects.get(user=user).classCode if models.Profile.objects.filter(
             user=user).exists() else "no class code",
-        'calculators': userCalculators,
+        'resources': userResources,
         'exam_started': True,
     })
 
@@ -136,4 +127,43 @@ def exam_video(request):
     return render(request, './Graphite/exam_video.html', {
         "rowNum": range(1, 3),
         "columnNum": range(1, 6),
+    })
+
+
+def add_resource(request):
+    if not utils.check_login(request):
+        return redirect('login')
+
+    classCode = models.Profile.objects.get(user=request.user).classCode
+
+    if request.method == 'POST':
+        resourceName = request.POST['name']
+        resourceURL = request.POST['url']
+        oldResourceName = request.POST['old_name']
+
+        if oldResourceName != '':
+            # delete old resource
+            utils.Resource.delete_resource(oldResourceName)
+
+        # add new resource
+        utils.Resource.add_resource(classCode, resourceName, resourceURL)
+
+        return redirect('/exam')
+
+    # check if resource param is in request
+    resourceName = request.GET.get('resource', '')
+
+    resources = utils.Resource.get_resources(models.Profile.objects.get(user=request.user).classCode)
+
+    resource = {
+        'name': resourceName,
+        'URL': ''
+    }
+
+    # check if resource is valid
+    if resourceName in [resource['name'] for resource in resources]:
+        resource['URL'] = utils.Resource.get_resource(resourceName)['url']
+
+    return render(request, './Graphite/add_resource.html', {
+        'resource': resource,
     })

@@ -70,7 +70,7 @@ def join_exam(request):
 
 
 @csrf_exempt
-def get_calculators(request):
+def get_resources(request):
     if request.method == 'GET':
         # get classCode
         response = HttpResponse()
@@ -83,7 +83,7 @@ def get_calculators(request):
             return response
 
         response.status_code = 200
-        response.content = json.dumps(utils.Calculator.get_allowed_calculators(class_code))
+        response.content = json.dumps(utils.Resource.get_resources(class_code))
         return response
 
     return HttpResponse('Invalid request method')
@@ -143,7 +143,7 @@ def get_exam_data(request):
         if not utils.check_login(request):
             return HttpResponse('Not logged in')
 
-        # return exam students, allowed_calculators, and exam_started
+        # return exam students, allowed_resources, and exam_started
         response = HttpResponse()
 
         # get classCode from user
@@ -153,8 +153,8 @@ def get_exam_data(request):
         students = Profile.objects.get(classCode=class_code).students.all()
         students = [student.username for student in students]
 
-        # get allowed calculators
-        allowed_calculators = utils.Calculator.get_allowed_calculators(class_code)
+        # get resources
+        resources = utils.Resource.get_resources(class_code)
 
         # get exam started
         exam_started = Profile.objects.get(user=request.user).examStarted
@@ -166,7 +166,7 @@ def get_exam_data(request):
         response.status_code = 200
         response.content = json.dumps({
             'students': students,
-            'allowed_calculators': allowed_calculators,
+            'resources': resources,
             'exam_started': exam_started,
             'left_students': left_students
         })
@@ -174,3 +174,110 @@ def get_exam_data(request):
         return response
 
     return HttpResponse('Invalid request method')
+
+
+def remove_student(request):
+    if request.method == 'GET':
+        return HttpResponse('Invalid request method')
+
+    # if authed
+    if not utils.check_login(request):
+        return HttpResponse('Not logged in')
+
+    # check if username is in request
+    body = json.loads(request.body)
+    if 'username' not in body:
+        return HttpResponse('Missing username')
+
+    username = body['username']
+
+    if not Student.objects.filter(username=username).exists():
+        return HttpResponse('Student does not exist')
+
+    # if student is not in the current user's exam
+    profile = Profile.objects.get(user=request.user)
+
+    if not profile.left_students.filter(username=username).exists() and not profile.students.filter(username=username).exists():
+        return HttpResponse('Student is not in this exam')
+
+    # delete student
+    Student.objects.get(username=username).delete()
+
+    return HttpResponse('Student removed')
+
+
+def toggle_resource(request):
+    if request.method == 'GET':
+        return HttpResponse('Invalid request method')
+
+    # check auth
+    if not utils.check_login(request):
+        return HttpResponse('Not logged in')
+
+    # check if resource and isEnable are in request
+    body = json.loads(request.body)
+
+    if 'resource' not in body:
+        return HttpResponse('Missing resource')
+
+    if 'isEnable' not in body:
+        return HttpResponse('Missing isEnable')
+
+    if not isinstance(body['isEnable'], bool):
+        return HttpResponse('isEnable must be a boolean')
+
+    resource = body['resource']
+    is_enable = body['isEnable']
+
+    # check if resource is valid
+    resources = utils.Resource.get_resources(Profile.objects.get(user=request.user).classCode)
+
+    # we cannot use in because resources is a list of dicts
+    foundResource = False
+    for r in resources:
+        if r['name'] == resource:
+            foundResource = True
+            break
+
+    if not foundResource:
+        return HttpResponse('Invalid resource')
+
+    # toggle resource
+    utils.Resource.toggle_resource(Profile.objects.get(user=request.user).classCode, resource, is_enable)
+
+    return HttpResponse('Resource toggled')
+
+
+def delete_resource(request):
+    if request.method == 'GET':
+        return HttpResponse('Invalid request method')
+
+    # check auth
+    if not utils.check_login(request):
+        return HttpResponse('Not logged in')
+
+    # check if resource is in request
+    body = json.loads(request.body)
+
+    if 'resource' not in body:
+        return HttpResponse('Missing resource')
+
+    resource = body['resource']
+
+    # check if resource is valid
+    resources = utils.Resource.get_resources(Profile.objects.get(user=request.user).classCode)
+
+    # we cannot use in because resources is a list of dicts
+    foundResource = False
+    for r in resources:
+        if r['name'] == resource:
+            foundResource = True
+            break
+
+    if not foundResource:
+        return HttpResponse('Invalid resource')
+
+    # delete resource
+    utils.Resource.delete_resource_from_profile(Profile.objects.get(user=request.user).classCode, resource)
+
+    return HttpResponse('Resource deleted')

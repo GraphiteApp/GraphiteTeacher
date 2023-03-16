@@ -4,38 +4,57 @@
 {% block body %}
     {% include "Graphite/navbar.html" %}
     <script src="{% static 'Graphite/javascript/exam.js' %}"></script>
-    <div class="d-flex flex-column justify-content-center align-items-center">
-        <h1>Exam started</h1>
-        <h3 class="mt-4">Class Code</h3>
-        <h3><b>{{ class_code }}</b></h3>
-        <h3 class="mt-4">Exam Students</h3>
-        <div class="mt-2" id="student-list">
-            <p>Loading...</p>
+
+    <div class="container">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <h1>Class Code</h1>
+            <h3><b>{{ class_code }}</b></h3>
         </div>
-        <h2 class="mt-4">
-            Allowed Calculators
-        </h2>
-        <form action="/exam" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="type" value="update_calculators">
-            {% for calculator in calculators %}
-                <div>
-                    <label>
-                        <input class="mt-2" type="checkbox" name="{{ calculator.name }}" value="{{ calculator.name }}" {% if calculator.isAllowed %}checked{% endif %}>
-                        {{ calculator.name }}
-                        <br>
-                    </label>
+
+        <div class="container container-fluid">
+          <div class="row">
+            <div class="col" id="student-table">
+                <h2 class="text-align-center"><b>Students</b></h2>
+                <div class="table table-responsive table-scrollable border">
+                  <table class="table table-hover">
+                      <thead class="thead-dark">
+                        <tr class="text-align-center">
+                            <th scope="col">Student Name</th>
+                            <th scope="col">Student Status</th>
+                            <th scope="col">Remove Student</th>
+                        </tr>
+                      </thead>
+                        <tbody id="student-list"></tbody>
+                  </table>
                 </div>
-            {% endfor %}
-            <input type="submit" value="Update" class="btn btn-primary mt-2">
-        </form>
+            </div>
+            <div class="col" id="resources-table">
+                <h2 class="text-align-center"><b>Resources</b></h2>
+                <div class="table table-responsive table-scrollable border">
+                  <table class="table table-hover">
+                      <thead class="thead-dark">
+                        <tr class="text-align-center">
+                            <th scope="col">Resource</th>
+                            <th scope="col">Toggle Resource</th>
+                            <th scope="col">Resource URL</th>
+                            <th scope="col">Edit Resource</th>
+                            <th scope="col"><a href="/add_resource" class="btn btn-outline-success btn-sm">+</a></th>
+                        </tr>
+                      </thead>
+                        <tbody id="resources-list"></tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+        </div>
 
-        <a class="btn btn-primary mt-4" href="/exam_video">View Student Screens</a>
-
-        <form action="/exam" method="post" class="mt-4">
-            {% csrf_token %}
-            <input type="hidden" name="type" value="end_exam">
-            <input type="submit" value="End Exam" class="btn btn-danger mt-2">
-        </form>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <form action="/exam" method="post" class="mt-4">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="end_exam">
+                <input type="submit" value="End Exam" class="btn btn-danger mt-2">
+            </form>
+        </div>
     </div>
+
 {% endblock %}
