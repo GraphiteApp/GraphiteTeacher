@@ -195,7 +195,9 @@ def remove_student(request):
         return HttpResponse('Student does not exist')
 
     # if student is not in the current user's exam
-    if Student.objects.get(username=username).teacher != request.user:
+    profile = Profile.objects.get(user=request.user)
+
+    if not profile.left_students.filter(username=username).exists() and not profile.students.filter(username=username).exists():
         return HttpResponse('Student is not in this exam')
 
     # delete student
