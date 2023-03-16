@@ -1,4 +1,5 @@
 const timeout = 1000
+let prevData = null
 
 function getCSRFToken() {
     let cookies = document.cookie.split(';')
@@ -257,7 +258,8 @@ function updateResources(data) {
 async function updateExam() {
     let data = await getData()
 
-    if (data) {
+    if (data && JSON.stringify(data) !== prevData) {
+        prevData = JSON.stringify(data)
         updateStudents(data)
         updateResources(data)
     }
