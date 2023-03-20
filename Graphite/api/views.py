@@ -83,7 +83,9 @@ def get_resources(request):
             return response
 
         response.status_code = 200
-        response.content = json.dumps(utils.Resource.get_resources(class_code))
+        response.content = json.dumps({
+            "allowed_resources": utils.Resource.get_resources(class_code)
+        })
         return response
 
     return HttpResponse('Invalid request method')
