@@ -119,9 +119,9 @@ def start_exam(user):
     profile = models.Profile.objects.get(user=user)
 
     resources = {
-        'Graphing Calculator': 'https://www.desmos.com/calculator',
-        'Scientific Calculator': 'https://www.desmos.com/scientific',
         'Basic Calculator': 'https://www.desmos.com/fourfunction',
+        'Scientific Calculator': 'https://www.desmos.com/scientific',
+        'Graphing Calculator': 'https://www.desmos.com/calculator',
         'Periodic Table': 'https://ptable.com/#Properties'
     }
 
