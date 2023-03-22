@@ -62,13 +62,33 @@
 }
 
 .img-main-r {
-    float:right;
+    display: block;
     border: 3px solid #611fda;
     margin-left: 1em;
 }
 
 .img-main-l {
-    float:left;
+    display: block;
     border: 3px solid #611fda;
     margin-right: 1em;
+}
+
+.mt-6 {
+    margin-top: 6em;
+}
+
+.mt-7 {
+    margin-top: 7em;
+}
+
+.mt-8 {
+    margin-top: 8em;
+}
+
+.mt-9 {
+    margin-top: 9em;
+}
+
+.mt-10 {
+    margin-top: 10em;
 }
