@@ -27,3 +27,48 @@
 .nav-text {
     font-size: 1.25em;
 }
+
+.lead {
+    font-size: 2em;
+    max-width: 50%;
+    text-align: center;
+    color: white;
+}
+
+.title {
+    font-size: 4em;
+    font-weight: bold;
+    color: white;
+}
+
+.btn-lead {
+    background-color: white; !important;
+    border-color: white; !important;
+    color: black; !important;
+}
+
+.btn-lead:hover {
+    background-color: white; !important;
+    border-color: white; !important;
+    color: #611fda; !important;
+}
+
+.large-p {
+    font-size: 1.5em;
+}
+
+.container-main {
+    width: 55%;
+}
+
+.img-main-r {
+    float:right;
+    border: 3px solid #611fda;
+    margin-left: 1em;
+}
+
+.img-main-l {
+    float:left;
+    border: 3px solid #611fda;
+    margin-right: 1em;
+}

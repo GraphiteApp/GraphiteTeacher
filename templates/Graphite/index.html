@@ -5,12 +5,38 @@
     <script src="{% static 'Graphite/javascript/index.js' %}"></script>
     {% include "Graphite/navbar.html" %}
     <div class="d-flex flex-column justify-content-center align-items-center">
-        <h1>Welcome, {{ user }}!</h1>
-        <p>
-            Your class code is: <b>{{ class_code }}</b>
-        </p>
-        <p>
-            To start an exam, click the Start Class button
-        </p>
+        <div class="d-flex flex-column justify-content-center align-items-center" style="background-color: #611fda; width: 100%">
+            <h1 class="title mt-5">Imagine a class...</h1>
+            <p class="lead mt-4">...where phones are no longer a distraction, but rather tools for learning. Where everyone can use phone calculators during exams. That's Graphite.</p>
+
+            <div class="mt-4 mb-5" style="padding-bottom: 3em">
+                <a href="/exam" class="btn btn-primary btn-lg btn-lead">Start an Exam</a>
+                <a href="" class="btn btn-primary btn-lg btn-lead">Get the App</a>
+            </div>
+        </div>
+
+        <div class="container-main mt-5">
+            <h1 class="text-align-center">
+                <img src="https://i.ibb.co/7kxWPVk/firefox-X4-Qy-XRZymz.png" class="img-main-r"/>
+
+                Add <span style="color:#611fda">custom</span> resources in seconds
+            </h1>
+            <p class="large-p text-align-center mt-4">
+                Graphite allows you to add any website to your class in seconds. Then, enable or disable access to the website during exams.
+            </p>
+        </div>
+
+        <div class="container-main mt-5">
+            <h1 class="text-align-center">
+                <img src="https://i.ibb.co/9GkSnNF/firefox-a6-Nu-U4-VTlm.png" class="img-main-l"/>
+
+                See the status of your students, <span style="color:#611fda">in real time</span>
+            </h1>
+            <p class="large-p text-align-center mt-4">
+                Instantly see which students are in your class, and which have left.
+            </p>
+        </div>
     </div>
+
+    {% include "Graphite/footer.html" %}
 {% endblock %}
