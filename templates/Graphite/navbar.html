@@ -3,7 +3,11 @@
   <div class="navbar-expand" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <a class="nav-item nav-link nav-text" href="/exam">{% if exam_started %} View Class {% else %} Start Class {% endif %}</a>
-      <a class="nav-item nav-link nav-text" href="/logout">Logout</a>
+        {% if is_logged_in %}
+            <a class="nav-item nav-link nav-text" href="/logout">Logout</a>
+        {% else %}
+            <a class="nav-item nav-link nav-text" href="/login">Login</a>
+        {% endif %}
     </div>
   </div>
 </nav>

@@ -7,9 +7,14 @@ from . import models
 import random
 import urllib.parse
 
+
 def index(request):
-    if not utils.check_login(request):
-        return redirect('login')
+    loggedIn = utils.check_login(request)
+
+    if loggedIn:
+        exam_started = utils.exam_started(request.user)
+    else:
+        exam_started = False
 
     if request.method == 'POST':
         models.Profile.objects.filter(user=request.user).update(examStarted=True)
@@ -17,10 +22,9 @@ def index(request):
         return redirect('/exam')
 
     return render(request, './Graphite/index.html', {
-        'class_code': models.Profile.objects.get(user=request.user).classCode if models.Profile.objects.filter(
-            user=request.user).exists() else "no class code",
         'user': request.user,
-        'exam_started': utils.exam_started(request.user),
+        'exam_started': exam_started,
+        'is_logged_in': loggedIn,
     })
 
 
@@ -69,11 +73,12 @@ def register(request):
 
 def logout_page(request):
     logout(request)
-    return redirect('login')
+    return redirect('/')
 
 
 def exam(request):
-    if not utils.check_login(request):
+    isLoggedIn = utils.check_login(request)
+    if not isLoggedIn:
         return redirect('login')
 
     user = request.user
@@ -113,11 +118,13 @@ def exam(request):
             user=user).exists() else "no class code",
         'resources': userResources,
         'exam_started': True,
+        'is_logged_in': isLoggedIn,
     })
 
 
 def exam_video(request):
-    if not utils.check_login(request):
+    isLoggedIn = utils.check_login(request)
+    if not isLoggedIn:
         return redirect('login')
 
     # if not exam started, redirect to exam
@@ -127,11 +134,13 @@ def exam_video(request):
     return render(request, './Graphite/exam_video.html', {
         "rowNum": range(1, 3),
         "columnNum": range(1, 6),
+        'is_logged_in': isLoggedIn,
     })
 
 
 def add_resource(request):
-    if not utils.check_login(request):
+    isLoggedIn = utils.check_login(request)
+    if not isLoggedIn:
         return redirect('login')
 
     classCode = models.Profile.objects.get(user=request.user).classCode
@@ -166,4 +175,6 @@ def add_resource(request):
 
     return render(request, './Graphite/add_resource.html', {
         'resource': resource,
+        'is_logged_in': isLoggedIn,
+        'exam_started': utils.exam_started(request.user),
     })
