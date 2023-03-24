@@ -1,0 +1,10 @@
+{% extends "Graphite/layout.html" %}
+{% load static %}
+
+{% block body %}
+    {% include "Graphite/navbar.html" %}
+
+    <div style="text-align: center" class="mt-4">
+        Settings for {{ user.username }}
+    </div>
+{% endblock %}

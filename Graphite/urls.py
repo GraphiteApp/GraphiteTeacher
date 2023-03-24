@@ -11,5 +11,6 @@ urlpatterns = [
     path('exam', views.exam, name='exam'),
     path('exam_video', views.exam_video, name='exam_video'),
     path('add_resource', views.add_resource, name='add_resource'),
+    path('settings', views.settings, name='settings'),
     path('', views.index, name='index'),
 ]

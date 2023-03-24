@@ -178,3 +178,14 @@ def add_resource(request):
         'is_logged_in': isLoggedIn,
         'exam_started': utils.exam_started(request.user),
     })
+
+
+def settings(request):
+    isLoggedIn = utils.check_login(request)
+    if not isLoggedIn:
+        return redirect('login')
+
+    return render(request, './Graphite/settings.html', {
+        'user': request.user,
+        'is_logged_in': isLoggedIn,
+    })
