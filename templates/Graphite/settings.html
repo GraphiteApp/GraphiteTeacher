@@ -3,8 +3,36 @@
 
 {% block body %}
     {% include "Graphite/navbar.html" %}
+    <script src="{% static 'Graphite/javascript/settings.js' %}"></script>
 
-    <div style="text-align: center" class="mt-4">
-        Settings for {{ user.username }}
+    <div style="text-align: center" class="mt-4 d-flex flex-column justify-content-center align-items-center">
+        <h1>Settings</h1>
+
+        <form method="post" id="settings-form">
+            {% csrf_token %}
+            <div class="form-group mt-2">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+            </div>
+            <div class="form-group mt-2">
+                <label for="password_old">Old Password</label>
+                <input type="password" class="form-control" id="password_old" name="password_old">
+            </div>
+            <div class="form-group mt-2">
+                <label for="password">New Password</label>
+                <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <div class="form-group mt-2">
+                <label for="password2">Confirm New Password</label>
+                <input type="password" class="form-control" id="password2" name="password2">
+            </div>
+
+            <input type="hidden" value="{{ user.username }}" name="username_old">
+            <input type="hidden" value="update_settings" name="action" id="settings-form-action">
+            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            <div>
+                <button class="btn btn-danger mt-2" onclick="confirmDeleteAccount()" type="button">Delete Account</button>
+            </div>
+        </form>
     </div>
 {% endblock %}
