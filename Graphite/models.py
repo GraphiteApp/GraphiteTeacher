@@ -9,7 +9,7 @@ class Student(models.Model):
 
 class Resource(models.Model):
     name = models.CharField(max_length=20, unique=True, null=False, blank=False)
-    url = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    url = models.CharField(max_length=100, null=False, blank=False)
 
 
 class Profile(models.Model):
