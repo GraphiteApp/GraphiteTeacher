@@ -1,5 +1,5 @@
 StartOnlineFedora:
-    cd /home/admin/GraphiteTeacher
+    cd /home/archons/GraphiteTeacher
     git pull
     python3 manage.py migrate
     python3 manage.py makemigrations
